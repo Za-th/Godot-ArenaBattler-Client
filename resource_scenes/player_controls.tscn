@@ -1,0 +1,116 @@
+[gd_scene load_steps=9 format=3 uid="uid://dkskcj6foqw8u"]
+
+[ext_resource type="Script" path="res://scripts/player controller.gd" id="1_fi5e6"]
+[ext_resource type="Texture2D" uid="uid://xx1aqv88pafu" path="res://sprites/hud_background.png" id="2_a510o"]
+[ext_resource type="Texture2D" uid="uid://birgblp1pgx4n" path="res://sprites/sprint.png" id="3_1yjyr"]
+[ext_resource type="Texture2D" uid="uid://dtptu2s8y6ou2" path="res://sprites/sprint_highlighted.png" id="4_b06sg"]
+[ext_resource type="Texture2D" uid="uid://bs1kyj6mreyxm" path="res://sprites/settings.png" id="5_7pnv6"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4a6kt"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7mxa0"]
+albedo_color = Color(0, 0, 0, 0.705882)
+
+[sub_resource type="TorusMesh" id="TorusMesh_vh428"]
+material = SubResource("StandardMaterial3D_7mxa0")
+inner_radius = 0.8
+
+[node name="Controller" type="StaticBody3D"]
+transform = Transform3D(1.00012, 0, 0, 0, 1.00012, 0, 0, 0, 1.00012, 0, 0, 0)
+script = ExtResource("1_fi5e6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_4a6kt")
+
+[node name="outline" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.277059, 0)
+mesh = SubResource("TorusMesh_vh428")
+
+[node name="hud" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 1113.0
+offset_top = -1.0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="background" type="TextureRect" parent="hud"]
+layout_mode = 0
+offset_left = -24.0
+offset_right = 40.0
+offset_bottom = 647.0
+texture = ExtResource("2_a510o")
+
+[node name="sprint_button" type="TextureButton" parent="hud/background"]
+layout_mode = 0
+offset_top = 5.0
+offset_right = 64.0
+offset_bottom = 69.0
+toggle_mode = true
+texture_normal = ExtResource("3_1yjyr")
+texture_pressed = ExtResource("4_b06sg")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="TextureButton" type="TextureButton" parent="hud/background"]
+layout_mode = 0
+offset_top = 578.0
+offset_right = 65.0
+offset_bottom = 648.0
+texture_normal = ExtResource("5_7pnv6")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="settings" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_left = 107.0
+offset_top = 83.0
+offset_right = 972.0
+offset_bottom = 560.0
+
+[node name="background" type="Polygon2D" parent="settings"]
+position = Vector2(21.9089, 4.47308)
+scale = Vector2(0.943458, 0.922277)
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(4, 12, 4.50467, 133.63, 6, 494, 434.497, 494.499, 865, 495, 865, 341.264, 865, 13)
+
+[node name="inner_colour" type="Polygon2D" parent="settings/background"]
+position = Vector2(15.3937, 30.931)
+scale = Vector2(0.97464, 0.880611)
+color = Color(0.552941, 0.552941, 0.552941, 1)
+polygon = PackedVector2Array(23, 29, 27, 473, 838, 475, 838, 29)
+
+[node name="quit" type="Button" parent="settings"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -85.5
+offset_top = -15.5
+offset_right = 85.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "QUIT"
+
+[node name="close" type="Button" parent="settings"]
+layout_mode = 0
+offset_left = 802.0
+offset_top = 17.0
+offset_right = 839.0
+offset_bottom = 52.0
+text = "X"
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.99988, 0, 0, 0, 0.99988, 0, 0, 0, 0.99988, 0, 0, 0)
+
+[connection signal="tree_exiting" from="." to="." method="_on_tree_exiting"]
+[connection signal="toggled" from="hud/background/sprint_button" to="." method="_sprint_toggled"]
+[connection signal="pressed" from="hud/background/TextureButton" to="." method="_settings_button_pressed"]
+[connection signal="pressed" from="settings/quit" to="." method="_quit_game"]
+[connection signal="pressed" from="settings/close" to="." method="_close_settings"]

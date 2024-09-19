@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://cjgvqdhk4ic24"]
+
+[ext_resource type="Script" path="res://scripts/creature.gd" id="1_fx2w7"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7s3o8"]
+albedo_color = Color(0.662745, 0.8, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7ngww"]
+material = SubResource("StandardMaterial3D_7s3o8")
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5q8tl"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="Rat" type="Node3D"]
+script = ExtResource("1_fx2w7")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_7ngww")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_5q8tl")

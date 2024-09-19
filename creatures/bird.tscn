@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://ci6lw60yngao4"]
+
+[ext_resource type="Script" path="res://scripts/creature.gd" id="1_c4waf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q4irb"]
+albedo_color = Color(0.682353, 0.466667, 0.572549, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_d5m81"]
+material = SubResource("StandardMaterial3D_q4irb")
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_0rdsr"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="Bird" type="Node3D"]
+script = ExtResource("1_c4waf")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("PrismMesh_d5m81")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_0rdsr")
