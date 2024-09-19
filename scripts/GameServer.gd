@@ -1,7 +1,5 @@
 extends Node3D
 
-@onready var menu:Control = $Menu
-
 const player_scene:PackedScene = preload("res://resource_scenes/player.tscn")
 const default_level:PackedScene = preload("res://levels/Hub Level.tscn")
 
@@ -59,16 +57,20 @@ func FetchToken():
 	print("Server requested token")
 	rpc_id(1, "ReturnToken", token)
 
+@rpc
+func ReturnToken():
+	pass
 
 @rpc("authority", "call_remote")
 func ReturnTokenVerificationResults(result:bool) -> void:
 	if result == true:
-		# TODO remove login screen
+		# remove login screen
+		get_node("Menu").queue_free.call_deferred()
 		print("Successful token verification")
 	else:
 		print("Login failed, please try again")
 		# reenable login button
-		get_node("../Node2D/VBoxContainer").login_button.disabled = false
+		get_node("../Menu/Login").login_button.disabled = false
 
 
 func _OnConnectionFailed():
@@ -77,7 +79,3 @@ func _OnConnectionFailed():
 
 func _OnConnectionSucceeded():
 	print("Succesfully connected to game server")
-
-@rpc
-func ReturnToken():
-	pass

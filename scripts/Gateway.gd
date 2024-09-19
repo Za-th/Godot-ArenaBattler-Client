@@ -9,6 +9,7 @@ var username:String
 var password:String
 var create_account:bool
 
+@onready var player_menu = get_node("../Main/Menu")
 
 func _ready():
 	pass
@@ -39,12 +40,12 @@ func ConnectToServer(_username:String, _password:String, _create_account:bool):
 
 
 func _OnConnectionFailed():
-	print("Failed to connect to login server")
 	if create_account:
-		$"../Main/Menu".signup_button.disabled = false
-		$"../Main/Menu".back_button.disabled = false
+		player_menu.signup_button.disabled = false
+		player_menu.back_button.disabled = false
+		player_menu.signup_error_box.text = "Failed to connect to login server"
 	else:
-		$"../Main/Menu".login_button.disabled = false
+		player_menu.login_button.disabled = false
 
 
 func _OnConnectionSucceeded():
@@ -52,11 +53,12 @@ func _OnConnectionSucceeded():
 	if create_account:
 		RequestSignUp()
 	else:
-		RequestLogin()
+		LoginRequest()
 
 # Login functions
 
-func RequestLogin():
+@rpc("authority", "call_remote")
+func LoginRequest():
 	print("Connecting to a gateway to request login")
 	rpc_id(1, "LoginRequest", username, password)
 	username = ""
@@ -65,24 +67,16 @@ func RequestLogin():
 
 @rpc("authority", "call_remote")
 func ReturnLoginRequest(result, token):
-	print("results received")
 	if result == true:
 		# if multiple game servers need to get ip
 		get_node("../Main").token = token
 		get_node("../Main").ConnectToServer()
-		
-		# remove login screen
-		get_node("../Main/Menu").hide()
 	else:
-		print("Please provide correct username and password")
-		$"../Main/Menu".login_button.disabled = false
+		player_menu.login_error_box.text = "Please provide correct username and password"
+		player_menu.login_button.disabled = false
 	multiplayer.connection_failed.disconnect(_OnConnectionFailed)
 	multiplayer.connected_to_server.disconnect(_OnConnectionSucceeded)
 
-
-@rpc("authority", "call_remote")
-func LoginRequest(_u, _p):
-	pass
 
 # Sign Up functions
 
@@ -95,16 +89,17 @@ func RequestSignUp():
 
 @rpc("authority", "call_remote")
 func ReturnCreateAccountRequest(valid_request:bool, message:int):
-	print("Received New Acct results: " + str(valid_request))
 	if valid_request and message == 3:
-		print("Successfully created account")
-		get_node("../Main/Menu")._on_back_pressed()
+		player_menu.signup_error_box.text = "Successfully created account"
+		player_menu._on_back_pressed()
+		player_menu.signup_button.disabled = false
+		player_menu.back_button.disabled = false
 	else:
 		if message == 2:
-			print("Username in use")
+			player_menu.signup_error_box.text = "Username in use"
 		elif message == 1:
-			print("Something went wrong, " + str(valid_request) + " " + str(message))
-		get_node("../Main/Menu").signup_button.disabled = false
-		get_node("../Main/Menu").back_button.disabled = false
+			player_menu.signup_error_box.text = "Something went wrong, " + str(valid_request) + " " + str(message)
+		player_menu.signup_button.disabled = false
+		player_menu.back_button.disabled = false
 	multiplayer.connection_failed.disconnect(_OnConnectionFailed)
 	multiplayer.connected_to_server.disconnect(_OnConnectionSucceeded)
