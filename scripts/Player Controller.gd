@@ -11,6 +11,7 @@ var sprinting:bool = false
 
 var active_creatures:Array
 var selected:Node3D
+@onready var inventory = get_node("Inventory/Panel/ScrollContainer/GridContainer") 
 
 var creatures:Array = [
 	"Rat",
@@ -21,7 +22,6 @@ var creatures:Array = [
 
 
 func set_up(level:Node3D, world:World3D) -> void:
-	if not is_multiplayer_authority(): return
 	
 	# set camera current rather than clashing with other players cameras
 	camera.current = true
@@ -48,7 +48,6 @@ func set_up(level:Node3D, world:World3D) -> void:
 
 
 func _process(_delta):
-	if not is_multiplayer_authority(): return
 	# TODO fix
 	camera.position = Vector3.ZERO
 	camera.rotation = Vector3.ZERO
@@ -57,7 +56,6 @@ func _process(_delta):
 
 
 func _on_click_area_input_event(_camera, e, pos, _normal, _shape_idx) -> void:
-	if not is_multiplayer_authority(): return
 	if selected:
 		if (e is InputEventMouseButton):
 			# left click moves selected
@@ -74,7 +72,6 @@ func _on_click_area_input_event(_camera, e, pos, _normal, _shape_idx) -> void:
 
 # keyboard input handling
 func _input(e) -> void:
-	if not is_multiplayer_authority(): return
 	var target:String = ""
 	
 	if e.is_action_pressed("1"):
@@ -113,38 +110,34 @@ func _input(e) -> void:
 func select(new_selected:Node3D) -> void:
 	# select creature
 	if (selected != null):
-		selected.get_node("outline").hide()
+		selected.get_node("Outline").hide()
 	selected = new_selected
-	selected.get_node("outline").show()
+	selected.get_node("Outline").show()
 
 
 func add_creature(creature:String) -> void:
-	# TODO working on it
 	get_parent().ask_server_to_add_creature(creature)
-	#active_creatures.append(creature)
-	#level_node.add_child(creature)
-	#creature.global_position = global_position
-	#creature.set_up(level_node, world_node)
 
 
 func get_creature(i:int) -> String:
-	if not is_multiplayer_authority(): return ""
 	return creatures[i]
 
 
 func change_action(action:String) -> void:
-	if not is_multiplayer_authority(): return
 	selected_action = action
 
 
 func perform_action() -> Array:
-	if not is_multiplayer_authority(): return ["_"]
 	print("selected action: ", selected_action)
 	return ["_"]
 
 
+func add_item() -> void:
+	pass
+
+# hud inputs
+
 func _sprint_toggled(toggled:bool) -> void:
-	if not is_multiplayer_authority(): return
 	if toggled:
 		move_speed = 10.0
 	else:
@@ -153,22 +146,26 @@ func _sprint_toggled(toggled:bool) -> void:
 
 
 func _settings_button_pressed() -> void:
-	if not is_multiplayer_authority(): return
-	get_node("settings").show()
+	get_node("Settings").show()
+
+
+func _on_inventory_pressed():
+	if get_node("Inventory").is_visible():
+		get_node("Inventory").hide()
+	else:
+		get_node("Inventory").show()
 
 
 func _quit_game() -> void:
-	if not is_multiplayer_authority(): return
 	get_tree().quit(0)
 
 
 func _close_settings() -> void:
-	if not is_multiplayer_authority(): return
-	get_node("settings").hide()
+	get_node("Settings").hide()
 
 
+# player cleanup, spawns finish point on level node so needs to be removed
 func _on_tree_exiting():
-	if not is_multiplayer_authority(): return
 	finish_point.queue_free.call_deferred()
 
 
@@ -178,4 +175,3 @@ func hurt() -> void:
 	if health <= 0:
 		health = 3
 		position = Vector3.ZERO
-
