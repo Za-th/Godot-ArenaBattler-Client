@@ -1,0 +1,94 @@
+[gd_scene load_steps=2 format=3 uid="uid://67xgv46v1bqe"]
+
+[ext_resource type="Script" path="res://scripts/LoginScreen.gd" id="1_u6xy5"]
+
+[node name="Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_u6xy5")
+
+[node name="LoginScreen" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -63.5
+offset_top = -68.0
+offset_right = 63.5
+offset_bottom = 68.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Username" type="LineEdit" parent="LoginScreen"]
+layout_mode = 2
+placeholder_text = "Username"
+
+[node name="Password" type="LineEdit" parent="LoginScreen"]
+layout_mode = 2
+placeholder_text = "Password"
+
+[node name="Login" type="Button" parent="LoginScreen"]
+layout_mode = 2
+text = "Login"
+
+[node name="CreateAccount" type="Button" parent="LoginScreen"]
+layout_mode = 2
+text = "Create Account"
+
+[node name="Error" type="Label" parent="LoginScreen"]
+layout_mode = 2
+
+[node name="SignUpScreen" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -85.5
+offset_right = 75.0
+offset_bottom = 85.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Username" type="LineEdit" parent="SignUpScreen"]
+layout_mode = 2
+placeholder_text = "Username"
+
+[node name="Password" type="LineEdit" parent="SignUpScreen"]
+layout_mode = 2
+placeholder_text = "Password"
+
+[node name="RepeatPassword" type="LineEdit" parent="SignUpScreen"]
+layout_mode = 2
+placeholder_text = "Repeat Password"
+
+[node name="SignUp" type="Button" parent="SignUpScreen"]
+layout_mode = 2
+text = "Sign Up"
+
+[node name="Back" type="Button" parent="SignUpScreen"]
+layout_mode = 2
+text = "Go Back"
+
+[node name="Error" type="Label" parent="SignUpScreen"]
+layout_mode = 2
+
+[connection signal="pressed" from="LoginScreen/Login" to="." method="_on_login_pressed"]
+[connection signal="pressed" from="LoginScreen/CreateAccount" to="." method="_on_create_account_pressed"]
+[connection signal="pressed" from="SignUpScreen/SignUp" to="." method="_on_sign_up_pressed"]
+[connection signal="pressed" from="SignUpScreen/Back" to="." method="_on_back_pressed"]

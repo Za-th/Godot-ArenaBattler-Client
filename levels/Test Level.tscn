@@ -1,6 +1,6 @@
 [gd_scene load_steps=22 format=3 uid="uid://dhvfh5rcc75q4"]
 
-[ext_resource type="Script" path="res://scripts/interactables.gd" id="3_3wchs"]
+[ext_resource type="Script" path="res://scripts/Interactables.gd" id="3_3wchs"]
 [ext_resource type="Script" path="res://interactables/npcs/scripts/box.gd" id="4_x8kmx"]
 [ext_resource type="Script" path="res://interactables/npcs/scripts/bob.gd" id="5_s6oxi"]
 [ext_resource type="PackedScene" uid="uid://cxrsevcsew0sh" path="res://interactables/level_switches/tutorial_level_switch.tscn" id="6_efcvp"]
