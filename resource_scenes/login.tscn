@@ -33,10 +33,12 @@ grow_vertical = 2
 
 [node name="Username" type="LineEdit" parent="LoginScreen"]
 layout_mode = 2
+text = "test"
 placeholder_text = "Username"
 
 [node name="Password" type="LineEdit" parent="LoginScreen"]
 layout_mode = 2
+text = "password"
 placeholder_text = "Password"
 
 [node name="Login" type="Button" parent="LoginScreen"]

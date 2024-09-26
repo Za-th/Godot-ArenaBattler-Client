@@ -6,12 +6,21 @@ var world_node:World3D
 
 var health:int = 3
 
-var selected_action:String
 var sprinting:bool = false
 
 var active_creatures:Array
 var selected:Node3D
 @onready var inventory = get_node("Inventory/Panel/ScrollContainer/GridContainer") 
+@onready var creature_hud = get_node("Hud/Creatures/HBoxContainer")
+@onready var abilities_hud = get_node("Hud/Abilities/HFlowContainer")
+
+var creature_hud_node_map:Dictionary = {"1": "FirstCreature", "2": "SecondCreature", "3": "ThirdCreature", "4": "FourthCreature"}
+var creature_hud_sprite_map:Dictionary = {
+	"1": "res://sprites/creatures/rat_icon.png",
+	"2": "res://sprites/creatures/dog_icon.png",
+	"3": "res://sprites/creatures/bird_icon.png",
+	"4": "res://sprites/creatures/cat_icon.png"
+}
 
 var creatures:Array = [
 	"Rat",
@@ -28,9 +37,6 @@ func set_up(level:Node3D, world:World3D) -> void:
 	
 	# select self to control player by default
 	select(self)
-	
-	# change to first action
-	change_action("1")
 	
 	# override default speed values
 	move_speed = 6.0
@@ -61,37 +67,28 @@ func _on_click_area_input_event(_camera, e, pos, _normal, _shape_idx) -> void:
 			# left click moves selected
 			if (e.button_index == 1 and e.pressed):
 				var _path:PackedVector3Array = selected.new_unit_path(pos)
-			# TODO change
-			if (e.button_index == 2 and e.pressed):
-				for player_id in multiplayer.get_peers():
-					# server id is 1
-					if player_id != 1:
-						pass
-						#hurt.rpc_id(player_id)
 
 
 # keyboard input handling
 func _input(e) -> void:
 	var target:String = ""
+	var action_pressed:String = ""
 	
 	if e.is_action_pressed("1"):
+		action_pressed = "1"
 		target = get_creature(0)
 	
 	if e.is_action_pressed("2"):
+		action_pressed = "2"
 		target = get_creature(1)
 	
 	if e.is_action_pressed("3"):
+		action_pressed = "3"
 		target = get_creature(2)
 	
 	if e.is_action_pressed("4"):
+		action_pressed = "4"
 		target = get_creature(3)
-	
-	if e.is_action_pressed("focus player"):
-		if (selected.name != "player"):
-			select(self)
-	
-	if e.is_action_pressed("stop player"):
-		stop_moving()
 	
 	if (target != ""):
 		if (selected.name != target):
@@ -102,17 +99,36 @@ func _input(e) -> void:
 					exists = true
 					break
 			if !exists:
-				# create creature
+				# create creature and add to creature hud
+				creature_hud.get_node(creature_hud_node_map[action_pressed]).set_texture(load(creature_hud_sprite_map[action_pressed]))
 				add_creature(target)
+		action_pressed = ""
 		target = ""
+	
+	if e.is_action_pressed("focus player"):
+		if (selected.name != "player"):
+			select(self)
+	
+	if e.is_action_pressed("stop player"):
+		stop_moving()
+	
+	if e.is_action_pressed("first ability"):
+		selected.perform_action(0)
+	
+	if e.is_action_pressed("second ability"):
+		selected.perform_action(2)
+	
+	if e.is_action_pressed("third ability"):
+		selected.perform_action(4)
 
 
 func select(new_selected:Node3D) -> void:
-	# select creature
 	if (selected != null):
 		selected.get_node("Outline").hide()
+		selected.get_node("Hud/Abilities").hide()
 	selected = new_selected
 	selected.get_node("Outline").show()
+	selected.get_node("Hud/Abilities").show()
 
 
 func add_creature(creature:String) -> void:
@@ -123,13 +139,8 @@ func get_creature(i:int) -> String:
 	return creatures[i]
 
 
-func change_action(action:String) -> void:
-	selected_action = action
-
-
-func perform_action() -> Array:
-	print("selected action: ", selected_action)
-	return ["_"]
+func perform_action(i:int):
+	abilities_hud.get_child(i).pressed()
 
 
 func add_item() -> void:
@@ -167,11 +178,3 @@ func _close_settings() -> void:
 # player cleanup, spawns finish point on level node so needs to be removed
 func _on_tree_exiting():
 	finish_point.queue_free.call_deferred()
-
-
-@rpc("any_peer")
-func hurt() -> void:
-	health -= 1
-	if health <= 0:
-		health = 3
-		position = Vector3.ZERO

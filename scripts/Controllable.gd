@@ -28,10 +28,6 @@ func _initialise(world:World3D, root:Node3D) -> void:
 	finish_point.name = name + "finish_point"
 	root_node.level_node.add_child.call_deferred(finish_point)
 
-# default method
-func perform_action():
-	return ["_"]
-
 func new_unit_path(pos:Vector3) -> PackedVector3Array:
 	if (!nav_map.is_valid()):
 		print("no nav mesh")

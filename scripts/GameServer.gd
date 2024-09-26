@@ -16,9 +16,9 @@ func _notification(what):
 
 
 func _ready():
-	# capture mouse
-	Input.mouse_mode = Input.MOUSE_MODE_CONFINED
-
+	# capture mouse TODO
+	#Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+	pass
 
 func _unhandled_input(_event):
 	if Input.is_action_pressed("quit"):
@@ -79,3 +79,9 @@ func _OnConnectionFailed():
 
 func _OnConnectionSucceeded():
 	print("Succesfully connected to game server")
+
+
+@rpc("authority", "call_remote")
+func SynchInventories(player_data:Dictionary):
+	print("Synched Inventory")
+	#rpc_id(player_id, "SynchInventories", player_data)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dkskcj6foqw8u"]
+[gd_scene load_steps=22 format=3 uid="uid://dkskcj6foqw8u"]
 
 [ext_resource type="Script" path="res://scripts/Player Controller.gd" id="1_weqgv"]
 [ext_resource type="Texture2D" uid="uid://xx1aqv88pafu" path="res://sprites/hud_background.png" id="2_a510o"]
@@ -8,6 +8,12 @@
 [ext_resource type="Texture2D" uid="uid://d1734qb1gjvq0" path="res://sprites/backpack.png" id="5_7641f"]
 [ext_resource type="Texture2D" uid="uid://bqthgoaa1t551" path="res://sprites/attack.png" id="6_aps3w"]
 [ext_resource type="Texture2D" uid="uid://bwd0rl0ehllk7" path="res://sprites/backpack_highlighted.png" id="6_u11md"]
+[ext_resource type="Texture2D" uid="uid://b6hp5niw4byh3" path="res://sprites/ability_background.png" id="8_mtgqw"]
+[ext_resource type="Texture2D" uid="uid://bwlqvbe60aeps" path="res://sprites/heal.png" id="9_61o0x"]
+[ext_resource type="Texture2D" uid="uid://de4mtnt6ovukr" path="res://sprites/damage.png" id="10_m5ucb"]
+[ext_resource type="Script" path="res://scripts/abilities/Heal.gd" id="10_ve4fb"]
+[ext_resource type="Script" path="res://scripts/abilities/Damage Buff.gd" id="12_fluhv"]
+[ext_resource type="Script" path="res://scripts/abilities/Attack.gd" id="14_ptdps"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4a6kt"]
 
@@ -17,6 +23,12 @@ albedo_color = Color(0, 0, 0, 0.705882)
 [sub_resource type="TorusMesh" id="TorusMesh_vh428"]
 material = SubResource("StandardMaterial3D_7mxa0")
 inner_radius = 0.8
+
+[sub_resource type="LabelSettings" id="LabelSettings_1vhu3"]
+font_size = 100
+
+[sub_resource type="LabelSettings" id="LabelSettings_4wve2"]
+font_size = 50
 
 [sub_resource type="LabelSettings" id="LabelSettings_d4ciq"]
 font_size = 80
@@ -45,14 +57,19 @@ offset_left = -39.0
 offset_bottom = 649.0
 grow_horizontal = 0
 
-[node name="background" type="TextureRect" parent="Hud"]
+[node name="Buttons" type="Control" parent="Hud"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="background" type="TextureRect" parent="Hud/Buttons"]
 layout_mode = 0
 offset_left = -69.0
 offset_right = 40.0
 offset_bottom = 1080.0
 texture = ExtResource("2_a510o")
 
-[node name="sprint_button" type="TextureButton" parent="Hud/background"]
+[node name="sprint_button" type="TextureButton" parent="Hud/Buttons/background"]
 layout_mode = 0
 offset_left = -3.0
 offset_top = 12.0
@@ -64,18 +81,19 @@ texture_pressed = ExtResource("4_b06sg")
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="Inventory" type="TextureButton" parent="Hud/background"]
+[node name="Inventory" type="TextureButton" parent="Hud/Buttons/background"]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 128.0
 offset_right = 105.0
 offset_bottom = 228.0
+disabled = true
 toggle_mode = true
 texture_normal = ExtResource("5_7641f")
 texture_pressed = ExtResource("6_u11md")
 stretch_mode = 0
 
-[node name="Settings" type="TextureButton" parent="Hud/background"]
+[node name="Settings" type="TextureButton" parent="Hud/Buttons/background"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -92,7 +110,230 @@ texture_normal = ExtResource("5_7pnv6")
 ignore_texture_size = true
 stretch_mode = 0
 
+[node name="ability_background" type="TextureRect" parent="Hud"]
+custom_minimum_size = Vector2(1700, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1795.5
+offset_top = 605.5
+offset_right = -195.5
+offset_bottom = 755.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_mtgqw")
+
+[node name="Abilities" type="Control" parent="Hud"]
+custom_minimum_size = Vector2(1600, 150)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -1776.0
+offset_top = 401.0
+offset_right = -176.0
+offset_bottom = 431.0
+grow_vertical = 0
+
+[node name="name" type="Label" parent="Hud/Abilities"]
+z_index = 1
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 17.0
+offset_top = -68.0
+offset_right = 378.0
+offset_bottom = 69.0
+grow_vertical = 2
+text = "Player"
+label_settings = SubResource("LabelSettings_1vhu3")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="HFlowContainer" type="HBoxContainer" parent="Hud/Abilities"]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -78.0
+offset_right = 616.0
+offset_bottom = 72.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Heal" type="TextureButton" parent="Hud/Abilities/HFlowContainer"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+mouse_filter = 2
+texture_normal = ExtResource("9_61o0x")
+stretch_mode = 0
+script = ExtResource("10_ve4fb")
+cooldown = null
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/Abilities/HFlowContainer/Heal"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+offset_right = 150.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/Abilities/HFlowContainer/Heal"]
+wait_time = 10.0
+one_shot = true
+
+[node name="spacer" type="Control" parent="Hud/Abilities/HFlowContainer"]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+
+[node name="Damage Buff" type="TextureButton" parent="Hud/Abilities/HFlowContainer"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+mouse_filter = 2
+texture_normal = ExtResource("10_m5ucb")
+stretch_mode = 0
+script = ExtResource("12_fluhv")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/Abilities/HFlowContainer/Damage Buff"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -75.0
+offset_right = 75.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/Abilities/HFlowContainer/Damage Buff"]
+wait_time = 5.0
+one_shot = true
+
+[node name="spacer2" type="Control" parent="Hud/Abilities/HFlowContainer"]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+
+[node name="Attack" type="TextureButton" parent="Hud/Abilities/HFlowContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+mouse_filter = 2
+texture_normal = ExtResource("6_aps3w")
+stretch_mode = 0
+script = ExtResource("14_ptdps")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/Abilities/HFlowContainer/Attack"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -75.0
+offset_right = 75.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/Abilities/HFlowContainer/Attack"]
+one_shot = true
+
+[node name="Creatures" type="Control" parent="Hud"]
+custom_minimum_size = Vector2(1000, 100)
+layout_mode = 3
+anchors_preset = 0
+offset_left = -1881.0
+offset_right = -881.0
+offset_bottom = 100.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Hud/Creatures"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="Hud/Creatures/HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+text = "1:"
+label_settings = SubResource("LabelSettings_4wve2")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FirstCreature" type="TextureRect" parent="Hud/Creatures/HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+
+[node name="Spacing" type="Control" parent="Hud/Creatures/HBoxContainer"]
+custom_minimum_size = Vector2(66.66, 0)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Hud/Creatures/HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+text = "2:"
+label_settings = SubResource("LabelSettings_4wve2")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SecondCreature" type="TextureRect" parent="Hud/Creatures/HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+
+[node name="Spacing2" type="Control" parent="Hud/Creatures/HBoxContainer"]
+custom_minimum_size = Vector2(66.66, 0)
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="Hud/Creatures/HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+text = "3:"
+label_settings = SubResource("LabelSettings_4wve2")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ThirdCreature" type="TextureRect" parent="Hud/Creatures/HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+
+[node name="Spacing3" type="Control" parent="Hud/Creatures/HBoxContainer"]
+custom_minimum_size = Vector2(66.66, 0)
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="Hud/Creatures/HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+text = "4:"
+label_settings = SubResource("LabelSettings_4wve2")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FourthCreature" type="TextureRect" parent="Hud/Creatures/HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+
 [node name="Inventory" type="Control" parent="."]
+visible = false
 custom_minimum_size = Vector2(1400, 800)
 layout_mode = 3
 anchors_preset = 8
@@ -231,8 +472,11 @@ label_settings = SubResource("LabelSettings_j0dw8")
 transform = Transform3D(0.99988, 0, 0, 0, 0.99988, 0, 0, 0, 0.99988, 0, 0, 0)
 
 [connection signal="tree_exiting" from="." to="." method="_on_tree_exiting"]
-[connection signal="toggled" from="Hud/background/sprint_button" to="." method="_sprint_toggled"]
-[connection signal="pressed" from="Hud/background/Inventory" to="." method="_on_inventory_pressed"]
-[connection signal="pressed" from="Hud/background/Settings" to="." method="_settings_button_pressed"]
+[connection signal="toggled" from="Hud/Buttons/background/sprint_button" to="." method="_sprint_toggled"]
+[connection signal="pressed" from="Hud/Buttons/background/Inventory" to="." method="_on_inventory_pressed"]
+[connection signal="pressed" from="Hud/Buttons/background/Settings" to="." method="_settings_button_pressed"]
+[connection signal="timeout" from="Hud/Abilities/HFlowContainer/Heal/Timer" to="Hud/Abilities/HFlowContainer/Heal" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/Abilities/HFlowContainer/Damage Buff/Timer" to="Hud/Abilities/HFlowContainer/Damage Buff" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/Abilities/HFlowContainer/Attack/Timer" to="Hud/Abilities/HFlowContainer/Attack" method="_on_timer_timeout"]
 [connection signal="pressed" from="Settings/quit" to="." method="_quit_game"]
 [connection signal="pressed" from="Settings/close" to="." method="_close_settings"]

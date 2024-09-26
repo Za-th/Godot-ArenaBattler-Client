@@ -1,6 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://8ne2mj11uu4h"]
+[gd_scene load_steps=8 format=3 uid="uid://8ne2mj11uu4h"]
 
 [ext_resource type="Script" path="res://scripts/Creature Controller.gd" id="1_8uji2"]
+[ext_resource type="Script" path="res://scripts/abilities/creatures/FirstAbility.gd" id="2_o1pqt"]
+[ext_resource type="Script" path="res://scripts/abilities/creatures/SecondAbility.gd" id="3_fptia"]
+[ext_resource type="Script" path="res://scripts/abilities/creatures/ThirdAbility.gd" id="4_uljcn"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pj5aq"]
 albedo_color = Color(0, 0, 0, 0.705882)
@@ -9,9 +12,155 @@ albedo_color = Color(0, 0, 0, 0.705882)
 material = SubResource("StandardMaterial3D_pj5aq")
 inner_radius = 0.8
 
+[sub_resource type="LabelSettings" id="LabelSettings_uwefj"]
+font_size = 100
+
 [node name="CreatureController" type="Node3D"]
 script = ExtResource("1_8uji2")
 
 [node name="Outline" type="MeshInstance3D" parent="."]
 visible = false
 mesh = SubResource("TorusMesh_tia5l")
+
+[node name="Hud" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Abilities" type="Control" parent="Hud"]
+visible = false
+custom_minimum_size = Vector2(1600, 150)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 140.0
+offset_top = 890.0
+offset_right = 1740.0
+offset_bottom = 1040.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="name" type="Label" parent="Hud/Abilities"]
+z_index = 1
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 17.0
+offset_top = -68.0
+offset_right = 378.0
+offset_bottom = 69.0
+grow_vertical = 2
+text = "n/a"
+label_settings = SubResource("LabelSettings_uwefj")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="HFlowContainer" type="HBoxContainer" parent="Hud/Abilities"]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -78.0
+offset_right = 616.0
+offset_bottom = 72.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FirstAbility" type="TextureButton" parent="Hud/Abilities/HFlowContainer"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+mouse_filter = 2
+stretch_mode = 0
+script = ExtResource("2_o1pqt")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/Abilities/HFlowContainer/FirstAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+offset_right = 150.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/Abilities/HFlowContainer/FirstAbility"]
+wait_time = 10.0
+one_shot = true
+
+[node name="spacer" type="Control" parent="Hud/Abilities/HFlowContainer"]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+
+[node name="SecondAbility" type="TextureButton" parent="Hud/Abilities/HFlowContainer"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+mouse_filter = 2
+stretch_mode = 0
+script = ExtResource("3_fptia")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/Abilities/HFlowContainer/SecondAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -75.0
+offset_right = 75.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/Abilities/HFlowContainer/SecondAbility"]
+wait_time = 5.0
+one_shot = true
+
+[node name="spacer2" type="Control" parent="Hud/Abilities/HFlowContainer"]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+
+[node name="ThirdAbility" type="TextureButton" parent="Hud/Abilities/HFlowContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+mouse_filter = 2
+stretch_mode = 0
+script = ExtResource("4_uljcn")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/Abilities/HFlowContainer/ThirdAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -75.0
+offset_right = 75.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/Abilities/HFlowContainer/ThirdAbility"]
+one_shot = true
+
+[connection signal="timeout" from="Hud/Abilities/HFlowContainer/FirstAbility/Timer" to="Hud/Abilities/HFlowContainer/FirstAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/Abilities/HFlowContainer/SecondAbility/Timer" to="Hud/Abilities/HFlowContainer/SecondAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/Abilities/HFlowContainer/ThirdAbility/Timer" to="Hud/Abilities/HFlowContainer/ThirdAbility" method="_on_timer_timeout"]

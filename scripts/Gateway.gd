@@ -11,9 +11,6 @@ var create_account:bool
 
 @onready var player_menu = get_node("../Main/Menu")
 
-func _ready():
-	pass
-
 
 func _process(_delta):
 	if multiplayer == null:
@@ -49,7 +46,6 @@ func _OnConnectionFailed():
 
 
 func _OnConnectionSucceeded():
-	print("Succesfully connected to login server")
 	if create_account:
 		RequestSignUp()
 	else:
@@ -59,7 +55,6 @@ func _OnConnectionSucceeded():
 
 @rpc("authority", "call_remote")
 func LoginRequest():
-	print("Connecting to a gateway to request login")
 	rpc_id(1, "LoginRequest", username, password)
 	username = ""
 	password = ""
@@ -82,7 +77,6 @@ func ReturnLoginRequest(result, token):
 
 @rpc("authority", "call_remote")
 func RequestSignUp():
-	print("Requesting new account")
 	rpc_id(1, "RequestSignUp", username, password)
 	username = ""
 	password = ""

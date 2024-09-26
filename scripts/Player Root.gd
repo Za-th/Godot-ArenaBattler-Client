@@ -49,8 +49,7 @@ func _process(_delta):
 		var collision_result:Array = level_switch.collision_result
 		if !collision_result.is_empty():
 			if (collision_result[0]["collider"].name == controller_node.name):
-				# send server rpc asking for level change to level path
-				# TODO improve
+				# send server rpc asking for level change
 				ask_server_for_level_change.rpc_id(
 					1, get_parent().name, level_switch.level_name
 				)
