@@ -20,11 +20,6 @@ func _ready():
 	#Input.mouse_mode = Input.MOUSE_MODE_CONFINED
 	pass
 
-func _unhandled_input(_event):
-	if Input.is_action_pressed("quit"):
-		_notification(NOTIFICATION_WM_CLOSE_REQUEST)
-		get_tree().quit(0)
-
 
 func ConnectToServer():
 	network.create_client(_IP, _PORT)
@@ -82,6 +77,6 @@ func _OnConnectionSucceeded():
 
 
 @rpc("authority", "call_remote")
-func SynchInventories(player_data:Dictionary):
+func SynchInventories(_player_data:Dictionary):
 	print("Synched Inventory")
 	#rpc_id(player_id, "SynchInventories", player_data)

@@ -8,11 +8,6 @@ var controller_node:StaticBody3D
 # set multiplayer authority when node (root node of player scene) enters tree so clients cannot run other players scripts
 func _enter_tree():
 	set_multiplayer_authority(str(name).to_int())
-	# TODO 
-	#Warning: This does not automatically replicate the new authority to other peers.
-	#It is the developer's responsibility to do so. 
-	#You may replicate the new authority's information using MultiplayerSpawner.spawn_function, an RPC, or a MultiplayerSynchronizer.
-	#Furthermore, the parent's authority does not propagate to newly added children.
 
 
 func _ready():

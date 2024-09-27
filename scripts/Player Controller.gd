@@ -10,9 +10,12 @@ var sprinting:bool = false
 
 var active_creatures:Array
 var selected:Node3D
-@onready var inventory = get_node("Inventory/Panel/ScrollContainer/GridContainer") 
+var selected_enemy:String
+@onready var inventory = get_node("Inventory/Panel/ScrollContainer/GridContainer")
 @onready var creature_hud = get_node("Hud/Creatures/HBoxContainer")
 @onready var abilities_hud = get_node("Hud/Abilities/HFlowContainer")
+
+var ability_map:Dictionary = {"FirstAbility": "Heal", "SecondAbility": "DamageBuff", "ThirdAbility": "Attack"}
 
 var creature_hud_node_map:Dictionary = {"1": "FirstCreature", "2": "SecondCreature", "3": "ThirdCreature", "4": "FourthCreature"}
 var creature_hud_sprite_map:Dictionary = {
@@ -113,13 +116,13 @@ func _input(e) -> void:
 		stop_moving()
 	
 	if e.is_action_pressed("first ability"):
-		selected.perform_action(0)
+		selected.perform_ability("FirstAbility")
 	
 	if e.is_action_pressed("second ability"):
-		selected.perform_action(2)
+		selected.perform_ability("SecondAbility")
 	
 	if e.is_action_pressed("third ability"):
-		selected.perform_action(4)
+		selected.perform_ability("ThirdAbility")
 
 
 func select(new_selected:Node3D) -> void:
@@ -139,8 +142,9 @@ func get_creature(i:int) -> String:
 	return creatures[i]
 
 
-func perform_action(i:int):
-	abilities_hud.get_child(i).pressed()
+func perform_ability(ability:String):
+	abilities_hud.get_node(ability).pressed()
+	AbilityHandler.used_ability(get_parent().name, ability_map[ability], selected_enemy)
 
 
 func add_item() -> void:

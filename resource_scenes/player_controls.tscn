@@ -171,16 +171,14 @@ offset_bottom = 72.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Heal" type="TextureButton" parent="Hud/Abilities/HFlowContainer"]
+[node name="FirstAbility" type="TextureButton" parent="Hud/Abilities/HFlowContainer"]
 custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 mouse_filter = 2
 texture_normal = ExtResource("9_61o0x")
-stretch_mode = 0
 script = ExtResource("10_ve4fb")
-cooldown = null
 
-[node name="Sweep" type="TextureProgressBar" parent="Hud/Abilities/HFlowContainer/Heal"]
+[node name="Sweep" type="TextureProgressBar" parent="Hud/Abilities/HFlowContainer/FirstAbility"]
 custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 offset_right = 150.0
@@ -190,7 +188,7 @@ grow_vertical = 2
 fill_mode = 5
 tint_progress = Color(0, 0, 0, 1)
 
-[node name="Timer" type="Timer" parent="Hud/Abilities/HFlowContainer/Heal"]
+[node name="Timer" type="Timer" parent="Hud/Abilities/HFlowContainer/FirstAbility"]
 wait_time = 10.0
 one_shot = true
 
@@ -198,15 +196,14 @@ one_shot = true
 custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
 
-[node name="Damage Buff" type="TextureButton" parent="Hud/Abilities/HFlowContainer"]
+[node name="SecondAbility" type="TextureButton" parent="Hud/Abilities/HFlowContainer"]
 custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 mouse_filter = 2
 texture_normal = ExtResource("10_m5ucb")
-stretch_mode = 0
 script = ExtResource("12_fluhv")
 
-[node name="Sweep" type="TextureProgressBar" parent="Hud/Abilities/HFlowContainer/Damage Buff"]
+[node name="Sweep" type="TextureProgressBar" parent="Hud/Abilities/HFlowContainer/SecondAbility"]
 custom_minimum_size = Vector2(150, 150)
 layout_mode = 1
 anchors_preset = 8
@@ -223,7 +220,7 @@ grow_vertical = 2
 fill_mode = 5
 tint_progress = Color(0, 0, 0, 1)
 
-[node name="Timer" type="Timer" parent="Hud/Abilities/HFlowContainer/Damage Buff"]
+[node name="Timer" type="Timer" parent="Hud/Abilities/HFlowContainer/SecondAbility"]
 wait_time = 5.0
 one_shot = true
 
@@ -231,15 +228,14 @@ one_shot = true
 custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
 
-[node name="Attack" type="TextureButton" parent="Hud/Abilities/HFlowContainer"]
-custom_minimum_size = Vector2(150, 0)
+[node name="ThirdAbility" type="TextureButton" parent="Hud/Abilities/HFlowContainer"]
+custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 mouse_filter = 2
 texture_normal = ExtResource("6_aps3w")
-stretch_mode = 0
 script = ExtResource("14_ptdps")
 
-[node name="Sweep" type="TextureProgressBar" parent="Hud/Abilities/HFlowContainer/Attack"]
+[node name="Sweep" type="TextureProgressBar" parent="Hud/Abilities/HFlowContainer/ThirdAbility"]
 custom_minimum_size = Vector2(150, 150)
 layout_mode = 1
 anchors_preset = 8
@@ -256,16 +252,17 @@ grow_vertical = 2
 fill_mode = 5
 tint_progress = Color(0, 0, 0, 1)
 
-[node name="Timer" type="Timer" parent="Hud/Abilities/HFlowContainer/Attack"]
+[node name="Timer" type="Timer" parent="Hud/Abilities/HFlowContainer/ThirdAbility"]
 one_shot = true
 
 [node name="Creatures" type="Control" parent="Hud"]
 custom_minimum_size = Vector2(1000, 100)
 layout_mode = 3
 anchors_preset = 0
-offset_left = -1881.0
-offset_right = -881.0
-offset_bottom = 100.0
+offset_left = -1824.0
+offset_top = 828.0
+offset_right = -824.0
+offset_bottom = 928.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Hud/Creatures"]
 layout_mode = 0
@@ -283,6 +280,7 @@ vertical_alignment = 1
 [node name="FirstCreature" type="TextureRect" parent="Hud/Creatures/HBoxContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
+expand_mode = 1
 
 [node name="Spacing" type="Control" parent="Hud/Creatures/HBoxContainer"]
 custom_minimum_size = Vector2(66.66, 0)
@@ -299,6 +297,7 @@ vertical_alignment = 1
 [node name="SecondCreature" type="TextureRect" parent="Hud/Creatures/HBoxContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
+expand_mode = 1
 
 [node name="Spacing2" type="Control" parent="Hud/Creatures/HBoxContainer"]
 custom_minimum_size = Vector2(66.66, 0)
@@ -315,6 +314,7 @@ vertical_alignment = 1
 [node name="ThirdCreature" type="TextureRect" parent="Hud/Creatures/HBoxContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
+expand_mode = 1
 
 [node name="Spacing3" type="Control" parent="Hud/Creatures/HBoxContainer"]
 custom_minimum_size = Vector2(66.66, 0)
@@ -331,6 +331,7 @@ vertical_alignment = 1
 [node name="FourthCreature" type="TextureRect" parent="Hud/Creatures/HBoxContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
+expand_mode = 1
 
 [node name="Inventory" type="Control" parent="."]
 visible = false
@@ -475,8 +476,8 @@ transform = Transform3D(0.99988, 0, 0, 0, 0.99988, 0, 0, 0, 0.99988, 0, 0, 0)
 [connection signal="toggled" from="Hud/Buttons/background/sprint_button" to="." method="_sprint_toggled"]
 [connection signal="pressed" from="Hud/Buttons/background/Inventory" to="." method="_on_inventory_pressed"]
 [connection signal="pressed" from="Hud/Buttons/background/Settings" to="." method="_settings_button_pressed"]
-[connection signal="timeout" from="Hud/Abilities/HFlowContainer/Heal/Timer" to="Hud/Abilities/HFlowContainer/Heal" method="_on_timer_timeout"]
-[connection signal="timeout" from="Hud/Abilities/HFlowContainer/Damage Buff/Timer" to="Hud/Abilities/HFlowContainer/Damage Buff" method="_on_timer_timeout"]
-[connection signal="timeout" from="Hud/Abilities/HFlowContainer/Attack/Timer" to="Hud/Abilities/HFlowContainer/Attack" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/Abilities/HFlowContainer/FirstAbility/Timer" to="Hud/Abilities/HFlowContainer/FirstAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/Abilities/HFlowContainer/SecondAbility/Timer" to="Hud/Abilities/HFlowContainer/SecondAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/Abilities/HFlowContainer/ThirdAbility/Timer" to="Hud/Abilities/HFlowContainer/ThirdAbility" method="_on_timer_timeout"]
 [connection signal="pressed" from="Settings/quit" to="." method="_quit_game"]
 [connection signal="pressed" from="Settings/close" to="." method="_close_settings"]
