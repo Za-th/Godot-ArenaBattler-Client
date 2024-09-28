@@ -1,7 +1,9 @@
+# TODO check in rpc calls if server is still connected
+
 extends Node3D
 
 const player_scene:PackedScene = preload("res://resource_scenes/player.tscn")
-const default_level:PackedScene = preload("res://levels/Hub Level.tscn")
+const player_controller_scene:PackedScene = preload("res://resource_scenes/PlayerController.tscn")
 
 const _PORT = 9999
 const _IP = "localhost"
@@ -13,12 +15,6 @@ var token:String
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		print("Game Closing")
-
-
-func _ready():
-	# capture mouse TODO
-	#Input.mouse_mode = Input.MOUSE_MODE_CONFINED
-	pass
 
 
 func ConnectToServer():
@@ -48,12 +44,27 @@ func server_disconnect():
 
 
 @rpc("authority", "call_remote")
-func FetchToken():
+func initialize_controller():
+	var player_controller = player_controller_scene.instantiate()
+	player_controller.name = str(network.get_unique_id()) + " Controller"
+	player_controller.set_multiplayer_authority(get_multiplayer_authority())
+	add_child(player_controller)
+	
+	# set up pathing controller
+	PathingController.nav_map = get_tree().root.get_world_3d().navigation_map
+	
+	# attach mouse click on navmesh to player controller
+	for level in get_node("NavigationRegion3D").get_children():
+		level.get_node("ClickArea").connect("input_event", player_controller._on_click_area_input_event)
+
+
+@rpc("authority", "call_remote")
+func FetchToken() -> void:
 	print("Server requested token")
 	rpc_id(1, "ReturnToken", token)
 
 @rpc
-func ReturnToken():
+func ReturnToken() -> void:
 	pass
 
 @rpc("authority", "call_remote")
@@ -75,8 +86,3 @@ func _OnConnectionFailed():
 func _OnConnectionSucceeded():
 	print("Succesfully connected to game server")
 
-
-@rpc("authority", "call_remote")
-func SynchInventories(_player_data:Dictionary):
-	print("Synched Inventory")
-	#rpc_id(player_id, "SynchInventories", player_data)

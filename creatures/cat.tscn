@@ -1,6 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://bb2yqkuum1qdw"]
-
-[ext_resource type="Script" path="res://scripts/Creature.gd" id="1_235tu"]
+[gd_scene load_steps=4 format=3 uid="uid://bb2yqkuum1qdw"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5ahj7"]
 albedo_color = Color(0.564706, 0.294118, 0.741176, 1)
@@ -18,7 +16,6 @@ properties/1/spawn = true
 properties/1/replication_mode = 1
 
 [node name="Cat" type="Node3D"]
-script = ExtResource("1_235tu")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_f3xyo")

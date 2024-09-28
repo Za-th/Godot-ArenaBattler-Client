@@ -1,0 +1,974 @@
+[gd_scene load_steps=21 format=3 uid="uid://dogdtm5n48w2m"]
+
+[ext_resource type="Script" path="res://scripts/PlayerController.gd" id="1_udu1q"]
+[ext_resource type="Texture2D" uid="uid://xx1aqv88pafu" path="res://sprites/hud_background.png" id="2_cxb6a"]
+[ext_resource type="Texture2D" uid="uid://birgblp1pgx4n" path="res://sprites/sprint.png" id="3_m6ft6"]
+[ext_resource type="Texture2D" uid="uid://dtptu2s8y6ou2" path="res://sprites/sprint_highlighted.png" id="4_cjmvx"]
+[ext_resource type="Texture2D" uid="uid://d1734qb1gjvq0" path="res://sprites/backpack.png" id="5_7y2fm"]
+[ext_resource type="Texture2D" uid="uid://bwd0rl0ehllk7" path="res://sprites/backpack_highlighted.png" id="6_yja7m"]
+[ext_resource type="Texture2D" uid="uid://bs1kyj6mreyxm" path="res://sprites/settings.png" id="7_j4qte"]
+[ext_resource type="Texture2D" uid="uid://b6hp5niw4byh3" path="res://sprites/ability_background.png" id="8_mv4aq"]
+[ext_resource type="Texture2D" uid="uid://bwlqvbe60aeps" path="res://sprites/heal.png" id="9_ar8a1"]
+[ext_resource type="Texture2D" uid="uid://de4mtnt6ovukr" path="res://sprites/damage.png" id="11_1xmu1"]
+[ext_resource type="Texture2D" uid="uid://bqthgoaa1t551" path="res://sprites/attack.png" id="13_4cy8m"]
+[ext_resource type="Script" path="res://scripts/abilities/FirstAbility.gd" id="13_uk13o"]
+[ext_resource type="Script" path="res://scripts/abilities/SecondAbility.gd" id="14_fprf0"]
+[ext_resource type="Script" path="res://scripts/abilities/AbilityHudSetup.gd" id="15_44liw"]
+[ext_resource type="Script" path="res://scripts/abilities/ThirdAbility.gd" id="15_mu8qh"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_4uid0"]
+font_size = 50
+
+[sub_resource type="LabelSettings" id="LabelSettings_og1f3"]
+font_size = 100
+
+[sub_resource type="LabelSettings" id="LabelSettings_b2hqk"]
+font_size = 100
+
+[sub_resource type="LabelSettings" id="LabelSettings_nky8b"]
+font_size = 80
+
+[sub_resource type="LabelSettings" id="LabelSettings_p8b5u"]
+font_size = 40
+
+[node name="PlayerController" type="Node"]
+script = ExtResource("1_udu1q")
+
+[node name="Hud" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -960.0
+offset_top = -540.0
+offset_right = 962.0
+offset_bottom = 542.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Buttons" type="Control" parent="Hud"]
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+
+[node name="background" type="TextureRect" parent="Hud/Buttons"]
+layout_mode = 0
+offset_left = -69.0
+offset_right = 40.0
+offset_bottom = 1080.0
+texture = ExtResource("2_cxb6a")
+
+[node name="sprint_button" type="TextureButton" parent="Hud/Buttons/background"]
+layout_mode = 0
+offset_left = -3.0
+offset_top = 12.0
+offset_right = 112.0
+offset_bottom = 131.0
+toggle_mode = true
+texture_normal = ExtResource("3_m6ft6")
+texture_pressed = ExtResource("4_cjmvx")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Inventory" type="TextureButton" parent="Hud/Buttons/background"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 128.0
+offset_right = 105.0
+offset_bottom = 228.0
+disabled = true
+toggle_mode = true
+texture_normal = ExtResource("5_7y2fm")
+texture_pressed = ExtResource("6_yja7m")
+stretch_mode = 0
+
+[node name="Settings" type="TextureButton" parent="Hud/Buttons/background"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -52.5
+offset_top = -116.0
+offset_right = 54.5
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 0
+texture_normal = ExtResource("7_j4qte")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="ability_background" type="TextureRect" parent="Hud"]
+custom_minimum_size = Vector2(1700, 150)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -850.0
+offset_top = -150.0
+offset_right = 850.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("8_mv4aq")
+
+[node name="ActiveCreatures" type="Control" parent="Hud"]
+custom_minimum_size = Vector2(1000, 100)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -842.0
+offset_top = -247.0
+offset_right = 158.0
+offset_bottom = -147.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Hud/ActiveCreatures"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="Hud/ActiveCreatures/HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+text = "1:"
+label_settings = SubResource("LabelSettings_4uid0")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FirstCreature" type="TextureRect" parent="Hud/ActiveCreatures/HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+expand_mode = 1
+
+[node name="Spacing" type="Control" parent="Hud/ActiveCreatures/HBoxContainer"]
+custom_minimum_size = Vector2(66.66, 0)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Hud/ActiveCreatures/HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+text = "2:"
+label_settings = SubResource("LabelSettings_4uid0")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SecondCreature" type="TextureRect" parent="Hud/ActiveCreatures/HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+expand_mode = 1
+
+[node name="Spacing2" type="Control" parent="Hud/ActiveCreatures/HBoxContainer"]
+custom_minimum_size = Vector2(66.66, 0)
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="Hud/ActiveCreatures/HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+text = "3:"
+label_settings = SubResource("LabelSettings_4uid0")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ThirdCreature" type="TextureRect" parent="Hud/ActiveCreatures/HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+expand_mode = 1
+
+[node name="Spacing3" type="Control" parent="Hud/ActiveCreatures/HBoxContainer"]
+custom_minimum_size = Vector2(66.66, 0)
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="Hud/ActiveCreatures/HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+text = "4:"
+label_settings = SubResource("LabelSettings_4uid0")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FourthCreature" type="TextureRect" parent="Hud/ActiveCreatures/HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+expand_mode = 1
+
+[node name="PlayerHud" type="Control" parent="Hud"]
+visible = false
+custom_minimum_size = Vector2(1600, 150)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -800.0
+offset_top = -150.0
+offset_right = 800.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("15_44liw")
+
+[node name="name" type="Label" parent="Hud/PlayerHud"]
+z_index = 1
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 17.0
+offset_top = -68.0
+offset_right = 378.0
+offset_bottom = 69.0
+grow_vertical = 2
+text = "Player"
+label_settings = SubResource("LabelSettings_og1f3")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="HFlowContainer" type="HBoxContainer" parent="Hud/PlayerHud"]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -78.0
+offset_right = 616.0
+offset_bottom = 72.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FirstAbility" type="TextureButton" parent="Hud/PlayerHud/HFlowContainer"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+mouse_filter = 2
+texture_normal = ExtResource("9_ar8a1")
+script = ExtResource("13_uk13o")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/PlayerHud/HFlowContainer/FirstAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+offset_right = 150.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/PlayerHud/HFlowContainer/FirstAbility"]
+wait_time = 10.0
+one_shot = true
+
+[node name="spacer" type="Control" parent="Hud/PlayerHud/HFlowContainer"]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+
+[node name="SecondAbility" type="TextureButton" parent="Hud/PlayerHud/HFlowContainer"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+mouse_filter = 2
+texture_normal = ExtResource("11_1xmu1")
+script = ExtResource("14_fprf0")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/PlayerHud/HFlowContainer/SecondAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -75.0
+offset_right = 75.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/PlayerHud/HFlowContainer/SecondAbility"]
+wait_time = 5.0
+one_shot = true
+
+[node name="spacer2" type="Control" parent="Hud/PlayerHud/HFlowContainer"]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+
+[node name="ThirdAbility" type="TextureButton" parent="Hud/PlayerHud/HFlowContainer"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+mouse_filter = 2
+texture_normal = ExtResource("13_4cy8m")
+script = ExtResource("15_mu8qh")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/PlayerHud/HFlowContainer/ThirdAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -75.0
+offset_right = 75.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/PlayerHud/HFlowContainer/ThirdAbility"]
+one_shot = true
+
+[node name="FirstCreatureHud" type="Control" parent="Hud"]
+visible = false
+custom_minimum_size = Vector2(1600, 150)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -89.0
+offset_top = -80.0
+offset_right = 89.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("15_44liw")
+
+[node name="name" type="Label" parent="Hud/FirstCreatureHud"]
+z_index = 1
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 17.0
+offset_top = -68.0
+offset_right = 378.0
+offset_bottom = 69.0
+grow_vertical = 2
+text = "n/a"
+label_settings = SubResource("LabelSettings_b2hqk")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="HFlowContainer" type="HBoxContainer" parent="Hud/FirstCreatureHud"]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -78.0
+offset_right = 616.0
+offset_bottom = 72.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FirstAbility" type="TextureButton" parent="Hud/FirstCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+mouse_filter = 2
+stretch_mode = 0
+script = ExtResource("13_uk13o")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/FirstCreatureHud/HFlowContainer/FirstAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+offset_right = 150.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/FirstCreatureHud/HFlowContainer/FirstAbility"]
+wait_time = 10.0
+one_shot = true
+
+[node name="spacer" type="Control" parent="Hud/FirstCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+
+[node name="SecondAbility" type="TextureButton" parent="Hud/FirstCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+mouse_filter = 2
+stretch_mode = 0
+script = ExtResource("14_fprf0")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/FirstCreatureHud/HFlowContainer/SecondAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -75.0
+offset_right = 75.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/FirstCreatureHud/HFlowContainer/SecondAbility"]
+wait_time = 5.0
+one_shot = true
+
+[node name="spacer2" type="Control" parent="Hud/FirstCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+
+[node name="ThirdAbility" type="TextureButton" parent="Hud/FirstCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+mouse_filter = 2
+stretch_mode = 0
+script = ExtResource("15_mu8qh")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/FirstCreatureHud/HFlowContainer/ThirdAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -75.0
+offset_right = 75.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/FirstCreatureHud/HFlowContainer/ThirdAbility"]
+one_shot = true
+
+[node name="SecondCreatureHud" type="Control" parent="Hud"]
+visible = false
+custom_minimum_size = Vector2(1600, 150)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -800.0
+offset_top = -150.0
+offset_right = 800.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("15_44liw")
+
+[node name="name" type="Label" parent="Hud/SecondCreatureHud"]
+z_index = 1
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 17.0
+offset_top = -68.0
+offset_right = 378.0
+offset_bottom = 69.0
+grow_vertical = 2
+text = "n/a"
+label_settings = SubResource("LabelSettings_b2hqk")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="HFlowContainer" type="HBoxContainer" parent="Hud/SecondCreatureHud"]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -78.0
+offset_right = 616.0
+offset_bottom = 72.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FirstAbility" type="TextureButton" parent="Hud/SecondCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+mouse_filter = 2
+stretch_mode = 0
+script = ExtResource("13_uk13o")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/SecondCreatureHud/HFlowContainer/FirstAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+offset_right = 150.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/SecondCreatureHud/HFlowContainer/FirstAbility"]
+wait_time = 10.0
+one_shot = true
+
+[node name="spacer" type="Control" parent="Hud/SecondCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+
+[node name="SecondAbility" type="TextureButton" parent="Hud/SecondCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+mouse_filter = 2
+stretch_mode = 0
+script = ExtResource("14_fprf0")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/SecondCreatureHud/HFlowContainer/SecondAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -75.0
+offset_right = 75.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/SecondCreatureHud/HFlowContainer/SecondAbility"]
+wait_time = 5.0
+one_shot = true
+
+[node name="spacer2" type="Control" parent="Hud/SecondCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+
+[node name="ThirdAbility" type="TextureButton" parent="Hud/SecondCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+mouse_filter = 2
+stretch_mode = 0
+script = ExtResource("15_mu8qh")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/SecondCreatureHud/HFlowContainer/ThirdAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -75.0
+offset_right = 75.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/SecondCreatureHud/HFlowContainer/ThirdAbility"]
+one_shot = true
+
+[node name="ThirdCreatureHud" type="Control" parent="Hud"]
+visible = false
+custom_minimum_size = Vector2(1600, 150)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -800.0
+offset_top = -150.0
+offset_right = 800.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("15_44liw")
+
+[node name="name" type="Label" parent="Hud/ThirdCreatureHud"]
+z_index = 1
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 17.0
+offset_top = -68.0
+offset_right = 378.0
+offset_bottom = 69.0
+grow_vertical = 2
+text = "n/a"
+label_settings = SubResource("LabelSettings_b2hqk")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="HFlowContainer" type="HBoxContainer" parent="Hud/ThirdCreatureHud"]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -78.0
+offset_right = 616.0
+offset_bottom = 72.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FirstAbility" type="TextureButton" parent="Hud/ThirdCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+mouse_filter = 2
+stretch_mode = 0
+script = ExtResource("13_uk13o")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/ThirdCreatureHud/HFlowContainer/FirstAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+offset_right = 150.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/ThirdCreatureHud/HFlowContainer/FirstAbility"]
+wait_time = 10.0
+one_shot = true
+
+[node name="spacer" type="Control" parent="Hud/ThirdCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+
+[node name="SecondAbility" type="TextureButton" parent="Hud/ThirdCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+mouse_filter = 2
+stretch_mode = 0
+script = ExtResource("14_fprf0")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/ThirdCreatureHud/HFlowContainer/SecondAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -75.0
+offset_right = 75.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/ThirdCreatureHud/HFlowContainer/SecondAbility"]
+wait_time = 5.0
+one_shot = true
+
+[node name="spacer2" type="Control" parent="Hud/ThirdCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+
+[node name="ThirdAbility" type="TextureButton" parent="Hud/ThirdCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+mouse_filter = 2
+stretch_mode = 0
+script = ExtResource("15_mu8qh")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/ThirdCreatureHud/HFlowContainer/ThirdAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -75.0
+offset_right = 75.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/ThirdCreatureHud/HFlowContainer/ThirdAbility"]
+one_shot = true
+
+[node name="FourthCreatureHud" type="Control" parent="Hud"]
+visible = false
+custom_minimum_size = Vector2(1600, 150)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -40.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("15_44liw")
+
+[node name="name" type="Label" parent="Hud/FourthCreatureHud"]
+z_index = 1
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 17.0
+offset_top = -68.0
+offset_right = 378.0
+offset_bottom = 69.0
+grow_vertical = 2
+text = "n/a"
+label_settings = SubResource("LabelSettings_b2hqk")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="HFlowContainer" type="HBoxContainer" parent="Hud/FourthCreatureHud"]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -78.0
+offset_right = 616.0
+offset_bottom = 72.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FirstAbility" type="TextureButton" parent="Hud/FourthCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+mouse_filter = 2
+stretch_mode = 0
+script = ExtResource("13_uk13o")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/FourthCreatureHud/HFlowContainer/FirstAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+offset_right = 150.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/FourthCreatureHud/HFlowContainer/FirstAbility"]
+wait_time = 10.0
+one_shot = true
+
+[node name="spacer" type="Control" parent="Hud/FourthCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+
+[node name="SecondAbility" type="TextureButton" parent="Hud/FourthCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+mouse_filter = 2
+stretch_mode = 0
+script = ExtResource("14_fprf0")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/FourthCreatureHud/HFlowContainer/SecondAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -75.0
+offset_right = 75.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/FourthCreatureHud/HFlowContainer/SecondAbility"]
+wait_time = 5.0
+one_shot = true
+
+[node name="spacer2" type="Control" parent="Hud/FourthCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+
+[node name="ThirdAbility" type="TextureButton" parent="Hud/FourthCreatureHud/HFlowContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+mouse_filter = 2
+stretch_mode = 0
+script = ExtResource("15_mu8qh")
+
+[node name="Sweep" type="TextureProgressBar" parent="Hud/FourthCreatureHud/HFlowContainer/ThirdAbility"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -75.0
+offset_right = 75.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 5
+tint_progress = Color(0, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="Hud/FourthCreatureHud/HFlowContainer/ThirdAbility"]
+one_shot = true
+
+[node name="Settings" type="Control" parent="."]
+visible = false
+custom_minimum_size = Vector2(1400, 800)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -700.0
+offset_top = -400.0
+offset_right = 700.0
+offset_bottom = 400.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="Settings"]
+custom_minimum_size = Vector2(1400, 800)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -700.0
+offset_top = -400.0
+offset_right = 700.0
+offset_bottom = 400.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="quit" type="Button" parent="Settings"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -152.0
+offset_top = -49.0
+offset_right = 152.0
+offset_bottom = 68.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Settings/quit"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -95.5
+offset_right = 95.5
+offset_bottom = 110.0
+grow_horizontal = 2
+text = "QUIT"
+label_settings = SubResource("LabelSettings_nky8b")
+
+[node name="close" type="Button" parent="Settings"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -60.0
+offset_bottom = 60.0
+grow_horizontal = 0
+
+[node name="Label" type="Label" parent="Settings/close"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -13.5
+offset_top = -27.5
+offset_right = 13.5
+offset_bottom = 27.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "X"
+label_settings = SubResource("LabelSettings_p8b5u")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.99988, 0, 0, 0, 0.99988, 0, 0, 0, 0.99988, 0, 0, 0)
+
+[connection signal="timeout" from="Hud/PlayerHud/HFlowContainer/FirstAbility/Timer" to="Hud/PlayerHud/HFlowContainer/FirstAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/PlayerHud/HFlowContainer/SecondAbility/Timer" to="Hud/PlayerHud/HFlowContainer/SecondAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/PlayerHud/HFlowContainer/ThirdAbility/Timer" to="Hud/PlayerHud/HFlowContainer/ThirdAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/FirstCreatureHud/HFlowContainer/FirstAbility/Timer" to="Hud/FirstCreatureHud/HFlowContainer/FirstAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/FirstCreatureHud/HFlowContainer/SecondAbility/Timer" to="Hud/FirstCreatureHud/HFlowContainer/SecondAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/FirstCreatureHud/HFlowContainer/ThirdAbility/Timer" to="Hud/FirstCreatureHud/HFlowContainer/ThirdAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/SecondCreatureHud/HFlowContainer/FirstAbility/Timer" to="Hud/SecondCreatureHud/HFlowContainer/FirstAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/SecondCreatureHud/HFlowContainer/SecondAbility/Timer" to="Hud/SecondCreatureHud/HFlowContainer/SecondAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/SecondCreatureHud/HFlowContainer/ThirdAbility/Timer" to="Hud/SecondCreatureHud/HFlowContainer/ThirdAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/ThirdCreatureHud/HFlowContainer/FirstAbility/Timer" to="Hud/ThirdCreatureHud/HFlowContainer/FirstAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/ThirdCreatureHud/HFlowContainer/SecondAbility/Timer" to="Hud/ThirdCreatureHud/HFlowContainer/SecondAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/ThirdCreatureHud/HFlowContainer/ThirdAbility/Timer" to="Hud/ThirdCreatureHud/HFlowContainer/ThirdAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/FourthCreatureHud/HFlowContainer/FirstAbility/Timer" to="Hud/FourthCreatureHud/HFlowContainer/FirstAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/FourthCreatureHud/HFlowContainer/SecondAbility/Timer" to="Hud/FourthCreatureHud/HFlowContainer/SecondAbility" method="_on_timer_timeout"]
+[connection signal="timeout" from="Hud/FourthCreatureHud/HFlowContainer/ThirdAbility/Timer" to="Hud/FourthCreatureHud/HFlowContainer/ThirdAbility" method="_on_timer_timeout"]

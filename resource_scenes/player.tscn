@@ -1,6 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cd3rf4ak40udi"]
-
-[ext_resource type="Script" path="res://scripts/Player Root.gd" id="1_m6cs4"]
+[gd_scene load_steps=5 format=3 uid="uid://cd3rf4ak40udi"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_6afsv"]
 
@@ -19,7 +17,6 @@ properties/1/spawn = true
 properties/1/replication_mode = 1
 
 [node name="Main" type="Node3D"]
-script = ExtResource("1_m6cs4")
 
 [node name="body" type="MeshInstance3D" parent="."]
 transform = Transform3D(1.00012, 0, 4.65717e-09, 0, 1.00012, 0, -4.65717e-09, 0, 1.00012, 0, 1.00012, 0)

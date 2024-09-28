@@ -1,6 +1,18 @@
 extends Node
 
-var creature_map:Dictionary = {
+var sprite_map:Dictionary = {
+	"Player": {
+		1: {"Sprite": "res://sprites/heal.png",
+			"Cooldown": 10.0,
+			"Name": "Heal"},
+		2: {"Sprite": "res://sprites/damage.png",
+			"Cooldown": 5.0,
+			"Name": "DamageBuff"},
+		3: {"Sprite": "res://sprites/attack.png",
+			"Cooldown": 1.0,
+			"Name": "Attack"}
+	},
+	
 	"Rat": {
 		1: {"Sprite": "res://sprites/creatures/lightning.png",
 			"Cooldown": 3.0,
@@ -50,16 +62,16 @@ var creature_map:Dictionary = {
 	}
 }
 
-func get_ability_sprite(creature_name:String, ability:int) -> String:
-	if !creature_map.has(creature_name):
+func get_ability_sprite(_name:String, ability:int) -> String:
+	if !sprite_map.has(_name):
 		return "res://sprites/error.png"
-	return creature_map[creature_name][ability]["Sprite"]
+	return sprite_map[_name][ability]["Sprite"]
 
-func get_ability_cooldown(creature_name:String, ability:int) -> float:
-	if !creature_map.has(creature_name):
+func get_ability_cooldown(_name:String, ability:int) -> float:
+	if !sprite_map.has(_name):
 		return 10.0
-	return creature_map[creature_name][ability]["Cooldown"]
+	return sprite_map[_name][ability]["Cooldown"]
 
-func get_ability_name(creature_name:String, ability:String) -> String:
+func get_ability_name(_name:String, ability:String) -> String:
 	var ability_map = {"FirstAbility": 1, "SecondAbility": 2, "ThirdAbility": 3}
-	return creature_map[creature_name][ability_map[ability]]["Name"]
+	return sprite_map[_name][ability_map[ability]]["Name"]
