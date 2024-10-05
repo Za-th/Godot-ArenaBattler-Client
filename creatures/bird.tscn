@@ -1,10 +1,124 @@
-[gd_scene load_steps=4 format=3 uid="uid://ci6lw60yngao4"]
+[gd_scene load_steps=17 format=3 uid="uid://ci6lw60yngao4"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q4irb"]
-albedo_color = Color(0.682353, 0.466667, 0.572549, 1)
+[ext_resource type="Script" path="res://scripts/abilities/AbilityVisuals.gd" id="1_jvpoc"]
+[ext_resource type="PackedScene" uid="uid://b1n0w3kbk3imp" path="res://models/bird.glb" id="1_obk10"]
+[ext_resource type="Script" path="res://scripts/misc/Healthbar.gd" id="2_m83oo"]
+[ext_resource type="Script" path="res://scripts/misc/HealthbarProgress.gd" id="3_68uw4"]
+[ext_resource type="PackedScene" uid="uid://bufj2yktmesrp" path="res://models/tornado.glb" id="3_isdqc"]
 
-[sub_resource type="PrismMesh" id="PrismMesh_d5m81"]
-material = SubResource("StandardMaterial3D_q4irb")
+[sub_resource type="Animation" id="Animation_i5dmp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -0.436853, -1.00695)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_pfvac"]
+resource_name = "tornado"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, -0.436853, -1.00695), Vector3(0, -0.436853, -3.18258)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 0,
+"values": []
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 4.71239, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_wweig"]
+_data = {
+"RESET": SubResource("Animation_i5dmp"),
+"tornado": SubResource("Animation_pfvac")
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3ux6x"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 1, 0.0941176)
+billboard_mode = 1
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hshux"]
+gravity = Vector3(0, 0, 0)
+linear_accel_min = 9.0
+linear_accel_max = 9.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_ex451"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7vd5v"]
+transparency = 1
+albedo_color = Color(0.360784, 0.360784, 0.360784, 0.588235)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ia7s4"]
+material = SubResource("StandardMaterial3D_7vd5v")
+radius = 1.5
+height = 3.0
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_3ci6n"]
+viewport_path = NodePath("AbilityVisuals/Effects/SubViewport")
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3ed4w"]
+properties/0/path = NodePath("TextureProgressBar:value")
+properties/0/spawn = true
+properties/0/replication_mode = 1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_0rdsr"]
 properties/0/path = NodePath(".:position")
@@ -16,8 +130,81 @@ properties/1/replication_mode = 1
 
 [node name="Bird" type="Node3D"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("PrismMesh_d5m81")
+[node name="body" parent="." instance=ExtResource("1_obk10")]
+transform = Transform3D(-0.1, 0, 8.74228e-09, 0, 0.1, 0, -8.74228e-09, 0, -0.1, 0, -0.75, 0)
+
+[node name="AbilityVisuals" type="Node3D" parent="."]
+script = ExtResource("1_jvpoc")
+
+[node name="Tornado" parent="AbilityVisuals" instance=ExtResource("3_isdqc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.436853, -1.00695)
+visible = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="AbilityVisuals/Tornado"]
+libraries = {
+"": SubResource("AnimationLibrary_wweig")
+}
+
+[node name="Push" type="GPUParticles3D" parent="AbilityVisuals"]
+material_override = SubResource("StandardMaterial3D_3ux6x")
+cast_shadow = 0
+emitting = false
+amount = 6
+one_shot = true
+fixed_fps = 15
+visibility_aabb = AABB(-0.6, -0.6, -0.842, 1.486, 1.36, 1.683)
+process_material = SubResource("ParticleProcessMaterial_hshux")
+draw_pass_1 = SubResource("QuadMesh_ex451")
+
+[node name="GPUParticlesAttractorSphere3D" type="GPUParticlesAttractorSphere3D" parent="AbilityVisuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.11186)
+visible = false
+radius = 2.48992
+
+[node name="Shield" type="MeshInstance3D" parent="AbilityVisuals"]
+visible = false
+mesh = SubResource("SphereMesh_ia7s4")
+skeleton = NodePath("../Tornado")
+
+[node name="Effects" type="Sprite3D" parent="AbilityVisuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.710519, 0)
+billboard = 1
+texture = SubResource("ViewportTexture_3ci6n")
+
+[node name="SubViewport" type="SubViewport" parent="AbilityVisuals/Effects"]
+transparent_bg = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AbilityVisuals/Effects/SubViewport"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Healthbar" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2634, 0)
+billboard = 1
+script = ExtResource("2_m83oo")
+
+[node name="SubViewport" type="SubViewport" parent="Healthbar"]
+size = Vector2i(200, 26)
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Healthbar/SubViewport"]
+offset_right = 40.0
+offset_bottom = 40.0
+value = 100.0
+script = ExtResource("3_68uw4")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Healthbar/SubViewport"]
+replication_config = SubResource("SceneReplicationConfig_3ed4w")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_0rdsr")
+
+[connection signal="value_changed" from="Healthbar/SubViewport/TextureProgressBar" to="Healthbar/SubViewport/TextureProgressBar" method="_on_value_changed"]

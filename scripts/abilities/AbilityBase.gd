@@ -2,6 +2,7 @@ extends TextureButton
 
 class_name AbilityBase
 
+# default value
 @export var cooldown:float = 10.0
 
 func _process(_delta):

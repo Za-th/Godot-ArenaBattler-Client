@@ -1,11 +1,54 @@
-[gd_scene load_steps=4 format=3 uid="uid://bb2yqkuum1qdw"]
+[gd_scene load_steps=18 format=3 uid="uid://bb2yqkuum1qdw"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5ahj7"]
-albedo_color = Color(0.564706, 0.294118, 0.741176, 1)
+[ext_resource type="PackedScene" uid="uid://bcv2b0kyl38e3" path="res://models/cat.glb" id="1_5oqv3"]
+[ext_resource type="Script" path="res://scripts/abilities/AbilityVisuals.gd" id="1_sg66b"]
+[ext_resource type="Script" path="res://scripts/misc/Healthbar.gd" id="2_1hvb3"]
+[ext_resource type="Script" path="res://scripts/misc/HealthbarProgress.gd" id="3_04sw3"]
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_f3xyo"]
-material = SubResource("StandardMaterial3D_5ahj7")
-height = 1.0
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ugr6"]
+albedo_color = Color(0.796078, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_52r6b"]
+material = SubResource("StandardMaterial3D_8ugr6")
+size = Vector3(0.1, 0.1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5dunl"]
+albedo_color = Color(0.796078, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wej7i"]
+material = SubResource("StandardMaterial3D_5dunl")
+size = Vector3(0.1, 0.1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0ttj5"]
+albedo_color = Color(0.796078, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_no12h"]
+material = SubResource("StandardMaterial3D_0ttj5")
+size = Vector3(0.1, 0.1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c5uyn"]
+albedo_color = Color(0.392157, 0.392157, 0.392157, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3lg03"]
+material = SubResource("StandardMaterial3D_c5uyn")
+size = Vector3(0.1, 0.1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_esjws"]
+transparency = 1
+albedo_color = Color(0.878431, 0, 0.2, 0.588235)
+
+[sub_resource type="SphereMesh" id="SphereMesh_pk5bi"]
+material = SubResource("StandardMaterial3D_esjws")
+radius = 2.0
+height = 4.0
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_6v5vm"]
+viewport_path = NodePath("AbilityVisuals/Effects/SubViewport")
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_xyae0"]
+properties/0/path = NodePath("TextureProgressBar:value")
+properties/0/spawn = true
+properties/0/replication_mode = 1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_toydv"]
 properties/0/path = NodePath(".:position")
@@ -17,8 +60,126 @@ properties/1/replication_mode = 1
 
 [node name="Cat" type="Node3D"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("CapsuleMesh_f3xyo")
+[node name="body" parent="." instance=ExtResource("1_5oqv3")]
+transform = Transform3D(-0.1, 0, -8.74228e-09, 0, 0.1, 0, 8.74228e-09, 0, -0.1, 0, -0.4, 0)
+
+[node name="AbilityVisuals" type="Node3D" parent="."]
+script = ExtResource("1_sg66b")
+
+[node name="Bleed" type="Node3D" parent="AbilityVisuals"]
+visible = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="AbilityVisuals/Bleed"]
+transform = Transform3D(0.0467055, 0.470036, -0.88141, -0.239644, 0.861877, 0.446921, 0.969737, 0.190351, 0.152896, 0.0966829, 0.533287, -0.855027)
+mesh = SubResource("BoxMesh_52r6b")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="AbilityVisuals/Bleed"]
+transform = Transform3D(0.0467055, 0.470036, -0.88141, -0.239644, 0.861877, 0.446921, 0.969737, 0.190351, 0.152896, -0.00155436, 0.353155, -0.89481)
+mesh = SubResource("BoxMesh_wej7i")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="AbilityVisuals/Bleed"]
+transform = Transform3D(0.0467055, 0.470036, -0.88141, -0.239644, 0.861877, 0.446921, 0.969737, 0.190351, 0.152896, -0.0951285, 0.181574, -0.932705)
+mesh = SubResource("BoxMesh_no12h")
+
+[node name="MultiAttack" type="Node3D" parent="AbilityVisuals"]
+
+[node name="Slash1" type="Node3D" parent="AbilityVisuals/MultiAttack"]
+transform = Transform3D(0.0304595, -0.0220577, -0.999293, -0.404875, 0.913794, -0.0325115, 0.913864, 0.405579, 0.0189031, 0, 0.932097, -1.63883)
+visible = false
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="AbilityVisuals/MultiAttack/Slash1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.174662, 0)
+mesh = SubResource("BoxMesh_3lg03")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="AbilityVisuals/MultiAttack/Slash1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.187866, 0)
+mesh = SubResource("BoxMesh_3lg03")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="AbilityVisuals/MultiAttack/Slash1"]
+mesh = SubResource("BoxMesh_3lg03")
+skeleton = NodePath("../..")
+
+[node name="Slash2" type="Node3D" parent="AbilityVisuals/MultiAttack"]
+transform = Transform3D(-0.237957, 0.131873, -0.962282, 0.49706, 0.867707, -0.00400222, 0.834451, -0.479264, -0.272026, -0.476065, 0.624451, 1.72048)
+visible = false
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="AbilityVisuals/MultiAttack/Slash2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.174662, 0)
+mesh = SubResource("BoxMesh_3lg03")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="AbilityVisuals/MultiAttack/Slash2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.187866, 0)
+mesh = SubResource("BoxMesh_3lg03")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="AbilityVisuals/MultiAttack/Slash2"]
+mesh = SubResource("BoxMesh_3lg03")
+skeleton = NodePath("../..")
+
+[node name="Slash3" type="Node3D" parent="AbilityVisuals/MultiAttack"]
+transform = Transform3D(-0.86764, 0.497072, 0.0109599, 0.49706, 0.867707, -0.00400223, -0.0114994, 0.00197526, -0.999932, -1.30089, 1.27206, -0.155515)
+visible = false
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="AbilityVisuals/MultiAttack/Slash3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.174662, 0)
+mesh = SubResource("BoxMesh_3lg03")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="AbilityVisuals/MultiAttack/Slash3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.187866, 0)
+mesh = SubResource("BoxMesh_3lg03")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="AbilityVisuals/MultiAttack/Slash3"]
+mesh = SubResource("BoxMesh_3lg03")
+skeleton = NodePath("../..")
+
+[node name="Hiss" type="MeshInstance3D" parent="AbilityVisuals"]
+visible = false
+mesh = SubResource("SphereMesh_pk5bi")
+
+[node name="Effects" type="Sprite3D" parent="AbilityVisuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.710519, 0)
+billboard = 1
+texture = SubResource("ViewportTexture_6v5vm")
+
+[node name="SubViewport" type="SubViewport" parent="AbilityVisuals/Effects"]
+transparent_bg = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AbilityVisuals/Effects/SubViewport"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Healthbar" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2634, 0)
+billboard = 1
+script = ExtResource("2_1hvb3")
+
+[node name="SubViewport" type="SubViewport" parent="Healthbar"]
+size = Vector2i(200, 26)
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Healthbar/SubViewport"]
+offset_right = 40.0
+offset_bottom = 40.0
+value = 100.0
+script = ExtResource("3_04sw3")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Healthbar/SubViewport"]
+replication_config = SubResource("SceneReplicationConfig_xyae0")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_toydv")
+
+[connection signal="value_changed" from="Healthbar/SubViewport/TextureProgressBar" to="Healthbar/SubViewport/TextureProgressBar" method="_on_value_changed"]

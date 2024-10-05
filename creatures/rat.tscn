@@ -1,10 +1,45 @@
-[gd_scene load_steps=4 format=3 uid="uid://cjgvqdhk4ic24"]
+[gd_scene load_steps=14 format=3 uid="uid://fd25ql7uy80l"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7s3o8"]
-albedo_color = Color(0.662745, 0.8, 0, 1)
+[ext_resource type="PackedScene" uid="uid://byih3qv04ubmh" path="res://models/rat.glb" id="1_4f31p"]
+[ext_resource type="Script" path="res://scripts/abilities/AbilityVisuals.gd" id="1_7183t"]
+[ext_resource type="Script" path="res://scripts/misc/Healthbar.gd" id="2_n2sbn"]
+[ext_resource type="Script" path="res://scripts/misc/HealthbarProgress.gd" id="3_73oqs"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_7ngww"]
-material = SubResource("StandardMaterial3D_7s3o8")
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fiapp"]
+transparency = 1
+albedo_color = Color(0.745098, 0.745098, 0, 0.588235)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ju5ph"]
+material = SubResource("StandardMaterial3D_fiapp")
+radius = 2.0
+height = 4.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pyn86"]
+transparency = 1
+albedo_color = Color(1, 0.207843, 0.188235, 0.588235)
+
+[sub_resource type="SphereMesh" id="SphereMesh_p5mjl"]
+material = SubResource("StandardMaterial3D_pyn86")
+radius = 2.0
+height = 4.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4qpmn"]
+transparency = 1
+albedo_color = Color(0, 0.913725, 0.913725, 0.588235)
+metallic = 0.6
+
+[sub_resource type="SphereMesh" id="SphereMesh_mka4x"]
+material = SubResource("StandardMaterial3D_4qpmn")
+radius = 1.0
+height = 2.0
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_tyunr"]
+viewport_path = NodePath("AbilityVisuals/Effects/SubViewport")
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_0may2"]
+properties/0/path = NodePath("TextureProgressBar:value")
+properties/0/spawn = true
+properties/0/replication_mode = 1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5q8tl"]
 properties/0/path = NodePath(".:position")
@@ -16,8 +51,63 @@ properties/1/replication_mode = 1
 
 [node name="Rat" type="Node3D"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_7ngww")
+[node name="body" parent="." instance=ExtResource("1_4f31p")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, -0.5, 0)
+
+[node name="AbilityVisuals" type="Node3D" parent="."]
+script = ExtResource("1_7183t")
+
+[node name="Lightning" type="MeshInstance3D" parent="AbilityVisuals"]
+visible = false
+mesh = SubResource("SphereMesh_ju5ph")
+
+[node name="SpeedDebuff" type="MeshInstance3D" parent="AbilityVisuals"]
+visible = false
+mesh = SubResource("SphereMesh_p5mjl")
+
+[node name="Stun" type="MeshInstance3D" parent="AbilityVisuals"]
+visible = false
+mesh = SubResource("SphereMesh_mka4x")
+
+[node name="Effects" type="Sprite3D" parent="AbilityVisuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.710519, 0)
+billboard = 1
+texture = SubResource("ViewportTexture_tyunr")
+
+[node name="SubViewport" type="SubViewport" parent="AbilityVisuals/Effects"]
+transparent_bg = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AbilityVisuals/Effects/SubViewport"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Healthbar" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2634, 0)
+billboard = 1
+script = ExtResource("2_n2sbn")
+
+[node name="SubViewport" type="SubViewport" parent="Healthbar"]
+size = Vector2i(200, 26)
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Healthbar/SubViewport"]
+offset_right = 40.0
+offset_bottom = 40.0
+value = 100.0
+script = ExtResource("3_73oqs")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Healthbar/SubViewport"]
+replication_config = SubResource("SceneReplicationConfig_0may2")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_5q8tl")
+
+[connection signal="value_changed" from="Healthbar/SubViewport/TextureProgressBar" to="Healthbar/SubViewport/TextureProgressBar" method="_on_value_changed"]

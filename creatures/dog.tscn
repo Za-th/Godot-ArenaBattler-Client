@@ -1,10 +1,25 @@
-[gd_scene load_steps=4 format=3 uid="uid://bjnysaalafe7w"]
+[gd_scene load_steps=10 format=3 uid="uid://bjnysaalafe7w"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_doc33"]
-albedo_color = Color(1, 0, 0, 1)
+[ext_resource type="PackedScene" uid="uid://cjn36vwmmor3l" path="res://models/dog.glb" id="1_3cbmh"]
+[ext_resource type="Script" path="res://scripts/abilities/AbilityVisuals.gd" id="1_ulft3"]
+[ext_resource type="Script" path="res://scripts/misc/Healthbar.gd" id="2_f7nnm"]
+[ext_resource type="Script" path="res://scripts/misc/HealthbarProgress.gd" id="3_3ocsq"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_okd23"]
-material = SubResource("StandardMaterial3D_doc33")
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_crqh3"]
+transparency = 1
+albedo_color = Color(0.615686, 1, 1, 0.588235)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_p52m8"]
+material = SubResource("StandardMaterial3D_crqh3")
+height = 15.0
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_0stys"]
+viewport_path = NodePath("AbilityVisuals/Effects/SubViewport")
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_7kh3d"]
+properties/0/path = NodePath("TextureProgressBar:value")
+properties/0/spawn = true
+properties/0/replication_mode = 1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_gsawp"]
 properties/0/path = NodePath(".:position")
@@ -16,8 +31,56 @@ properties/1/replication_mode = 1
 
 [node name="Dog" type="Node3D"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_okd23")
+[node name="body" parent="." instance=ExtResource("1_3cbmh")]
+transform = Transform3D(-0.2, 0, -1.74846e-08, 0, 0.2, 0, 1.74846e-08, 0, -0.2, 0, -0.5, 0)
+
+[node name="AbilityVisuals" type="Node3D" parent="."]
+script = ExtResource("1_ulft3")
+
+[node name="Charge" type="MeshInstance3D" parent="AbilityVisuals"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -8.61473)
+visible = false
+mesh = SubResource("CylinderMesh_p52m8")
+
+[node name="Effects" type="Sprite3D" parent="AbilityVisuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.46019, 0)
+billboard = 1
+texture = SubResource("ViewportTexture_0stys")
+
+[node name="SubViewport" type="SubViewport" parent="AbilityVisuals/Effects"]
+transparent_bg = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AbilityVisuals/Effects/SubViewport"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Healthbar" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2634, 0)
+billboard = 1
+script = ExtResource("2_f7nnm")
+
+[node name="SubViewport" type="SubViewport" parent="Healthbar"]
+size = Vector2i(200, 26)
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Healthbar/SubViewport"]
+offset_right = 40.0
+offset_bottom = 40.0
+value = 100.0
+script = ExtResource("3_3ocsq")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Healthbar/SubViewport"]
+replication_config = SubResource("SceneReplicationConfig_7kh3d")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_gsawp")
+
+[connection signal="value_changed" from="Healthbar/SubViewport/TextureProgressBar" to="Healthbar/SubViewport/TextureProgressBar" method="_on_value_changed"]

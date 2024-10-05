@@ -1,20 +1,22 @@
-[gd_scene load_steps=21 format=3 uid="uid://dogdtm5n48w2m"]
+[gd_scene load_steps=19 format=3 uid="uid://dogdtm5n48w2m"]
 
-[ext_resource type="Script" path="res://scripts/PlayerController.gd" id="1_udu1q"]
+[ext_resource type="Script" path="res://scripts/player/PlayerInput.gd" id="1_r7peu"]
 [ext_resource type="Texture2D" uid="uid://xx1aqv88pafu" path="res://sprites/hud_background.png" id="2_cxb6a"]
 [ext_resource type="Texture2D" uid="uid://birgblp1pgx4n" path="res://sprites/sprint.png" id="3_m6ft6"]
 [ext_resource type="Texture2D" uid="uid://dtptu2s8y6ou2" path="res://sprites/sprint_highlighted.png" id="4_cjmvx"]
-[ext_resource type="Texture2D" uid="uid://d1734qb1gjvq0" path="res://sprites/backpack.png" id="5_7y2fm"]
-[ext_resource type="Texture2D" uid="uid://bwd0rl0ehllk7" path="res://sprites/backpack_highlighted.png" id="6_yja7m"]
+[ext_resource type="Script" path="res://scripts/abilities/AbilityHudSetup.gd" id="7_1i0ks"]
 [ext_resource type="Texture2D" uid="uid://bs1kyj6mreyxm" path="res://sprites/settings.png" id="7_j4qte"]
 [ext_resource type="Texture2D" uid="uid://b6hp5niw4byh3" path="res://sprites/ability_background.png" id="8_mv4aq"]
+[ext_resource type="Script" path="res://scripts/abilities/AbilityButtonSetup.gd" id="9_643gf"]
 [ext_resource type="Texture2D" uid="uid://bwlqvbe60aeps" path="res://sprites/heal.png" id="9_ar8a1"]
 [ext_resource type="Texture2D" uid="uid://de4mtnt6ovukr" path="res://sprites/damage.png" id="11_1xmu1"]
 [ext_resource type="Texture2D" uid="uid://bqthgoaa1t551" path="res://sprites/attack.png" id="13_4cy8m"]
-[ext_resource type="Script" path="res://scripts/abilities/FirstAbility.gd" id="13_uk13o"]
-[ext_resource type="Script" path="res://scripts/abilities/SecondAbility.gd" id="14_fprf0"]
-[ext_resource type="Script" path="res://scripts/abilities/AbilityHudSetup.gd" id="15_44liw"]
-[ext_resource type="Script" path="res://scripts/abilities/ThirdAbility.gd" id="15_mu8qh"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_pw5e6"]
+load_path = "res://.godot/imported/backpack.png-b4cfe5c8bb39014ec0ed79785a3d2a66.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_cqpgd"]
+load_path = "res://.godot/imported/backpack_highlighted.png-f596c2540ff14bffe298a5cfac7eedbb.ctex"
 
 [sub_resource type="LabelSettings" id="LabelSettings_4uid0"]
 font_size = 50
@@ -32,7 +34,7 @@ font_size = 80
 font_size = 40
 
 [node name="PlayerController" type="Node"]
-script = ExtResource("1_udu1q")
+script = ExtResource("1_r7peu")
 
 [node name="Hud" type="Control" parent="."]
 layout_mode = 3
@@ -86,8 +88,8 @@ offset_right = 105.0
 offset_bottom = 228.0
 disabled = true
 toggle_mode = true
-texture_normal = ExtResource("5_7y2fm")
-texture_pressed = ExtResource("6_yja7m")
+texture_normal = SubResource("CompressedTexture2D_pw5e6")
+texture_pressed = SubResource("CompressedTexture2D_cqpgd")
 stretch_mode = 0
 
 [node name="Settings" type="TextureButton" parent="Hud/Buttons/background"]
@@ -220,7 +222,7 @@ offset_top = -150.0
 offset_right = 800.0
 grow_horizontal = 2
 grow_vertical = 0
-script = ExtResource("15_44liw")
+script = ExtResource("7_1i0ks")
 
 [node name="name" type="Label" parent="Hud/PlayerHud"]
 z_index = 1
@@ -260,7 +262,7 @@ custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 mouse_filter = 2
 texture_normal = ExtResource("9_ar8a1")
-script = ExtResource("13_uk13o")
+script = ExtResource("9_643gf")
 
 [node name="Sweep" type="TextureProgressBar" parent="Hud/PlayerHud/HFlowContainer/FirstAbility"]
 custom_minimum_size = Vector2(150, 150)
@@ -285,7 +287,7 @@ custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 mouse_filter = 2
 texture_normal = ExtResource("11_1xmu1")
-script = ExtResource("14_fprf0")
+script = ExtResource("9_643gf")
 
 [node name="Sweep" type="TextureProgressBar" parent="Hud/PlayerHud/HFlowContainer/SecondAbility"]
 custom_minimum_size = Vector2(150, 150)
@@ -317,7 +319,7 @@ custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 mouse_filter = 2
 texture_normal = ExtResource("13_4cy8m")
-script = ExtResource("15_mu8qh")
+script = ExtResource("9_643gf")
 
 [node name="Sweep" type="TextureProgressBar" parent="Hud/PlayerHud/HFlowContainer/ThirdAbility"]
 custom_minimum_size = Vector2(150, 150)
@@ -353,7 +355,7 @@ offset_top = -80.0
 offset_right = 89.0
 grow_horizontal = 2
 grow_vertical = 0
-script = ExtResource("15_44liw")
+script = ExtResource("7_1i0ks")
 
 [node name="name" type="Label" parent="Hud/FirstCreatureHud"]
 z_index = 1
@@ -393,7 +395,7 @@ custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 mouse_filter = 2
 stretch_mode = 0
-script = ExtResource("13_uk13o")
+script = ExtResource("9_643gf")
 
 [node name="Sweep" type="TextureProgressBar" parent="Hud/FirstCreatureHud/HFlowContainer/FirstAbility"]
 custom_minimum_size = Vector2(150, 150)
@@ -418,7 +420,7 @@ custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 mouse_filter = 2
 stretch_mode = 0
-script = ExtResource("14_fprf0")
+script = ExtResource("9_643gf")
 
 [node name="Sweep" type="TextureProgressBar" parent="Hud/FirstCreatureHud/HFlowContainer/SecondAbility"]
 custom_minimum_size = Vector2(150, 150)
@@ -450,7 +452,7 @@ custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 mouse_filter = 2
 stretch_mode = 0
-script = ExtResource("15_mu8qh")
+script = ExtResource("9_643gf")
 
 [node name="Sweep" type="TextureProgressBar" parent="Hud/FirstCreatureHud/HFlowContainer/ThirdAbility"]
 custom_minimum_size = Vector2(150, 150)
@@ -486,7 +488,7 @@ offset_top = -150.0
 offset_right = 800.0
 grow_horizontal = 2
 grow_vertical = 0
-script = ExtResource("15_44liw")
+script = ExtResource("7_1i0ks")
 
 [node name="name" type="Label" parent="Hud/SecondCreatureHud"]
 z_index = 1
@@ -526,7 +528,7 @@ custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 mouse_filter = 2
 stretch_mode = 0
-script = ExtResource("13_uk13o")
+script = ExtResource("9_643gf")
 
 [node name="Sweep" type="TextureProgressBar" parent="Hud/SecondCreatureHud/HFlowContainer/FirstAbility"]
 custom_minimum_size = Vector2(150, 150)
@@ -551,7 +553,7 @@ custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 mouse_filter = 2
 stretch_mode = 0
-script = ExtResource("14_fprf0")
+script = ExtResource("9_643gf")
 
 [node name="Sweep" type="TextureProgressBar" parent="Hud/SecondCreatureHud/HFlowContainer/SecondAbility"]
 custom_minimum_size = Vector2(150, 150)
@@ -583,7 +585,7 @@ custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 mouse_filter = 2
 stretch_mode = 0
-script = ExtResource("15_mu8qh")
+script = ExtResource("9_643gf")
 
 [node name="Sweep" type="TextureProgressBar" parent="Hud/SecondCreatureHud/HFlowContainer/ThirdAbility"]
 custom_minimum_size = Vector2(150, 150)
@@ -619,7 +621,7 @@ offset_top = -150.0
 offset_right = 800.0
 grow_horizontal = 2
 grow_vertical = 0
-script = ExtResource("15_44liw")
+script = ExtResource("7_1i0ks")
 
 [node name="name" type="Label" parent="Hud/ThirdCreatureHud"]
 z_index = 1
@@ -659,7 +661,7 @@ custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 mouse_filter = 2
 stretch_mode = 0
-script = ExtResource("13_uk13o")
+script = ExtResource("9_643gf")
 
 [node name="Sweep" type="TextureProgressBar" parent="Hud/ThirdCreatureHud/HFlowContainer/FirstAbility"]
 custom_minimum_size = Vector2(150, 150)
@@ -684,7 +686,7 @@ custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 mouse_filter = 2
 stretch_mode = 0
-script = ExtResource("14_fprf0")
+script = ExtResource("9_643gf")
 
 [node name="Sweep" type="TextureProgressBar" parent="Hud/ThirdCreatureHud/HFlowContainer/SecondAbility"]
 custom_minimum_size = Vector2(150, 150)
@@ -716,7 +718,7 @@ custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 mouse_filter = 2
 stretch_mode = 0
-script = ExtResource("15_mu8qh")
+script = ExtResource("9_643gf")
 
 [node name="Sweep" type="TextureProgressBar" parent="Hud/ThirdCreatureHud/HFlowContainer/ThirdAbility"]
 custom_minimum_size = Vector2(150, 150)
@@ -752,7 +754,7 @@ offset_top = -40.0
 offset_right = 20.0
 grow_horizontal = 2
 grow_vertical = 0
-script = ExtResource("15_44liw")
+script = ExtResource("7_1i0ks")
 
 [node name="name" type="Label" parent="Hud/FourthCreatureHud"]
 z_index = 1
@@ -792,7 +794,7 @@ custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 mouse_filter = 2
 stretch_mode = 0
-script = ExtResource("13_uk13o")
+script = ExtResource("9_643gf")
 
 [node name="Sweep" type="TextureProgressBar" parent="Hud/FourthCreatureHud/HFlowContainer/FirstAbility"]
 custom_minimum_size = Vector2(150, 150)
@@ -817,7 +819,7 @@ custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 mouse_filter = 2
 stretch_mode = 0
-script = ExtResource("14_fprf0")
+script = ExtResource("9_643gf")
 
 [node name="Sweep" type="TextureProgressBar" parent="Hud/FourthCreatureHud/HFlowContainer/SecondAbility"]
 custom_minimum_size = Vector2(150, 150)
@@ -849,7 +851,7 @@ custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 mouse_filter = 2
 stretch_mode = 0
-script = ExtResource("15_mu8qh")
+script = ExtResource("9_643gf")
 
 [node name="Sweep" type="TextureProgressBar" parent="Hud/FourthCreatureHud/HFlowContainer/ThirdAbility"]
 custom_minimum_size = Vector2(150, 150)
